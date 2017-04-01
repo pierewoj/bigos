@@ -1,8 +1,20 @@
 version: '2'
 
 services:
+  zeus:
+    image: pierewoj/zeus:latest
+    depends_on:
+      - athena
+      - rabbit
   athena:
     image: pierewoj/athena:latest
+    hostname: athena
+  rabbit:
+    image: rabbitmq:3-management
+    hostname: rabbit
+    ports:
+      - "8080:15672"
+      - "8081:5672"
 networks:
   default:
     external:
