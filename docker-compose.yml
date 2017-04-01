@@ -1,0 +1,9 @@
+version: '2'
+
+services:
+  athena:
+    image: pierewoj/athena:latest
+networks:
+  default:
+    external:
+      name: def_net
