@@ -31,6 +31,18 @@ services:
     - SERVICE_80_CHECK_INTERVAL=15s
     depends_on:
       - registrator
+      - kisiel
+    ports:
+      - "3613:80"
+
+  kisiel:
+    image: redis
+    environment:
+    - SERVICE_NAME=kisiel
+    ports:
+      - "6379:6379"
+    depends_on:
+      - registrator
 
   rabbit:
     image: rabbitmq:3-management
