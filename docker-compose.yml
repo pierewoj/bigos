@@ -22,6 +22,7 @@ services:
       - athena
       - rabbit
       - registrator
+      - koper
 
   athena:
     image: pierewoj/athena:latest
@@ -35,12 +36,29 @@ services:
     ports:
       - "3613:80"
 
+  pieprz:
+    image: pierewoj/pieprz:latest
+    environment:
+    - SERVICE_NAME=pieprz
+    - SERVICE_80_CHECK_HTTP=/health
+    - SERVICE_80_CHECK_INTERVAL=15s
+    depends_on:
+      - registrator
+      - koper
+      - athena
+      - rabbit
+
   kisiel:
     image: redis
     environment:
     - SERVICE_NAME=kisiel
-    ports:
-      - "6379:6379"
+    depends_on:
+      - registrator
+
+  koper:
+    image: redis
+    environment:
+    - SERVICE_NAME=koper
     depends_on:
       - registrator
 
