@@ -1,0 +1,46 @@
+version: '2'
+
+services:
+  consul:
+    image: gliderlabs/consul-server:latest
+    command: "-server -bootstrap"
+    hostname: consul
+    ports:
+      - 8500:8500
+
+  registrator:
+    image: gliderlabs/registrator:latest
+    command: "-ip consul -internal consul://consul:8500"
+    volumes:
+    - /var/run/docker.sock:/tmp/docker.sock
+    depends_on:
+    - consul
+
+  kisiel:
+    image: redis
+    environment:
+    - SERVICE_NAME=kisiel
+    depends_on:
+      - registrator
+
+  koper:
+    image: redis
+    environment:
+    - SERVICE_NAME=koper
+    depends_on:
+      - registrator
+
+  rabbit:
+    image: rabbitmq:3-management
+    environment:
+    - SERVICE_NAME=rabbit
+    ports:
+      - "8080:15672"
+      - "8081:5672"
+    depends_on:
+      - registrator
+
+networks:
+  default:
+    external:
+      name: def_net

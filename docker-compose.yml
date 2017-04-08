@@ -1,28 +1,14 @@
 version: '2'
 
 services:
-  consul:
-    image: gliderlabs/consul-server:latest
-    command: "-server -bootstrap"
-    hostname: consul
-    ports:
-      - 8500:8500
-
-  registrator:
-    image: gliderlabs/registrator:latest
-    command: "-ip consul -internal consul://consul:8500"
-    volumes:
-    - /var/run/docker.sock:/tmp/docker.sock
-    depends_on:
-    - consul
-
   zeus:
     image: pierewoj/zeus:latest
+    environment:
+    - SERVICE_NAME=zeus
+    - SERVICE_80_CHECK_HTTP=/health-check
+    - SERVICE_80_CHECK_INTERVAL=15s
     depends_on:
-      - athena
-      - rabbit
-      - registrator
-      - koper
+    - athena
 
   athena:
     image: pierewoj/athena:latest
@@ -30,11 +16,6 @@ services:
     - SERVICE_NAME=athena
     - SERVICE_80_CHECK_HTTP=/health-check
     - SERVICE_80_CHECK_INTERVAL=15s
-    depends_on:
-      - registrator
-      - kisiel
-    ports:
-      - "3613:80"
 
   pieprz:
     image: pierewoj/pieprz:latest
@@ -43,34 +24,8 @@ services:
     - SERVICE_80_CHECK_HTTP=/health
     - SERVICE_80_CHECK_INTERVAL=15s
     depends_on:
-      - registrator
-      - koper
-      - athena
-      - rabbit
-
-  kisiel:
-    image: redis
-    environment:
-    - SERVICE_NAME=kisiel
-    depends_on:
-      - registrator
-
-  koper:
-    image: redis
-    environment:
-    - SERVICE_NAME=koper
-    depends_on:
-      - registrator
-
-  rabbit:
-    image: rabbitmq:3-management
-    environment:
-    - SERVICE_NAME=rabbit
-    ports:
-      - "8080:15672"
-      - "8081:5672"
-    depends_on:
-      - registrator
+    - zeus
+    - athena
 
 networks:
   default:
