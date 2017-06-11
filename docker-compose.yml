@@ -15,6 +15,11 @@ services:
     - zeus
     - athena
 
+  kalmar:
+    image: pierewoj/kalmar:latest
+    ports:
+      - "8002:8000"
+
 networks:
   default:
     external:
