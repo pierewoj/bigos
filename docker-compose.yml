@@ -3,26 +3,14 @@ version: '2'
 services:
   zeus:
     image: pierewoj/zeus:latest
-    environment:
-    - SERVICE_NAME=zeus
-    - SERVICE_80_CHECK_HTTP=/health-check
-    - SERVICE_80_CHECK_INTERVAL=15s
     depends_on:
     - athena
 
   athena:
     image: pierewoj/athena:latest
-    environment:
-    - SERVICE_NAME=athena
-    - SERVICE_80_CHECK_HTTP=/health-check
-    - SERVICE_80_CHECK_INTERVAL=15s
 
   pieprz:
     image: pierewoj/pieprz:latest
-    environment:
-    - SERVICE_NAME=pieprz
-    - SERVICE_80_CHECK_HTTP=/health
-    - SERVICE_80_CHECK_INTERVAL=15s
     depends_on:
     - zeus
     - athena
