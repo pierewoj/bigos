@@ -15,6 +15,9 @@ services:
     - zeus
     - athena
 
+  tagliatelle:
+    image: siwy/tagliatelle:latest
+
   kalmar:
     image: pierewoj/kalmar:latest
     ports:
